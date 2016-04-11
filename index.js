@@ -35,8 +35,8 @@ var templateManager = function(fs) {
             throw "view directory not specified";
         }
 
-        var templatePattern = /@[[a-zA-z0-9]+]/g;
-        var viewPattern = /sddd/g;
+        var templatePattern = /@[[a-zA-Z0-9]+]/g;
+        var viewPattern = />>[A-Za-z0-9]+:\n{1}(.+\n)*<</g;
         var templatePlaceholders = templateContent.match(templatePattern);
         
         loadView(viewName,function(viewContent){
