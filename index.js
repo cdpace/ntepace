@@ -5,15 +5,20 @@ var templateManager = function(fs) {
     var templatePath = "";
     var viewsPath = "";
     var templateContent = null;
+    var templatePlaceholders = [];
     var fileEncoding = "utf-8";
 
     //Loads template html content from cache or fom file
     function loadTemplate() {
-        return _fs.readFileSync(templatePath, fileEncoding);
+        var templatePattern = /@[[a-zA-Z0-9]+]/g;
+        
+        templateContent = _fs.readFileSync(templatePath, fileEncoding);
+        templatePlaceholders = templateContent.match(templatePattern);
+        
     }
 
     function loadView(viewName, callback) {
-        _fs.readFile(viewsPath + viewName,fileEncoding, function(err, content) {
+        _fs.readFile(viewsPath + viewName, fileEncoding, function(err, content) {
             if (err) throw err;
             callback(content);
         });
@@ -23,7 +28,7 @@ var templateManager = function(fs) {
     this.init = function(template, viewsFolder) {
         templatePath = template;
         viewsPath = viewsFolder;
-        templateContent = loadTemplate();
+        loadTemplate();
     }
 
     this.processView = function(viewName, params) {
@@ -36,14 +41,10 @@ var templateManager = function(fs) {
             throw "view directory not specified";
         }
 
-        var templatePattern = /@[[a-zA-Z0-9]+]/g;
-        var templatePlaceholders = templateContent.match(templatePattern);
-        
-        loadView(viewName,function(viewContent){
+        loadView(viewName, function(viewContent) {
             debugger;
             var viewPattern = />>[A-Za-z0-9]+:(\r\n){1}(.+\r\n)*<</g;
             var viewTags = viewContent.match(viewPattern);
-            debugger;
         });
 
     }
