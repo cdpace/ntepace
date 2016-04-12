@@ -5,14 +5,15 @@ var templateManager = function(fs) {
     var templatePath = "";
     var viewsPath = "";
     var templateContent = null;
+    var fileEncoding = "utf-8";
 
     //Loads template html content from cache or fom file
     function loadTemplate() {
-        return _fs.readFileSync(templatePath, "utf-8");
+        return _fs.readFileSync(templatePath, fileEncoding);
     }
 
     function loadView(viewName, callback) {
-        _fs.readFile(viewsPath + viewName, function(err, content) {
+        _fs.readFile(viewsPath + viewName,fileEncoding, function(err, content) {
             if (err) throw err;
             callback(content);
         });
@@ -40,7 +41,9 @@ var templateManager = function(fs) {
         var templatePlaceholders = templateContent.match(templatePattern);
         
         loadView(viewName,function(viewContent){
-            
+            debugger;
+            var viewTags = viewContent.match(viewPattern);
+            debugger;
         });
 
     }
