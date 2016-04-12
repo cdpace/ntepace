@@ -37,11 +37,11 @@ var templateManager = function(fs) {
         }
 
         var templatePattern = /@[[a-zA-Z0-9]+]/g;
-        var viewPattern = />>[A-Za-z0-9]+:\n{1}(.+\n)*<</g;
         var templatePlaceholders = templateContent.match(templatePattern);
         
         loadView(viewName,function(viewContent){
             debugger;
+            var viewPattern = />>[A-Za-z0-9]+:(\r\n){1}(.+\r\n)*<</g;
             var viewTags = viewContent.match(viewPattern);
             debugger;
         });
