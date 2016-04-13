@@ -11,10 +11,10 @@ var templateManager = function(fs) {
     //Loads template html content from cache or fom file
     function loadTemplate() {
         var templatePattern = /@[[a-zA-Z0-9]+]/g;
-        
+
         templateContent = _fs.readFileSync(templatePath, fileEncoding);
         templatePlaceholders = templateContent.match(templatePattern);
-        
+
     }
 
     function loadView(viewName, callback) {
@@ -45,6 +45,22 @@ var templateManager = function(fs) {
             debugger;
             var viewPattern = />>[A-Za-z0-9]+:(\r\n){1}(.+\r\n)*<</g;
             var viewTags = viewContent.match(viewPattern);
+            
+            templatePlaceholders.forEach(function(tag) {
+                 debugger;
+                 console.log(tag);
+                 var tagName = tag.replace("@[","").replace(']',"");
+                 viewTags.forEach(function(viewTag) {
+                     if(viewTag.indexOf(">>" + tagName + ":") != -1){
+                         var viewPart = viewTag.replace(">>" + tagName + ":");
+                         viewPart = viewPart.replace("<<","");
+                         
+                         templateContent = templateContent.replace(tag,viewPart);
+                     }
+                 }, this);
+            },this);
+                      
+            return templateContent;
         });
 
     }
@@ -57,4 +73,4 @@ var fs = require("fs");
 var man = new templateManager(fs);
 man.init("./test/template/masterLayout.html", "./test/views/");
 
-man.processView("index.html", null);
+console.log(man.processView("index.html", null));
