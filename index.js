@@ -1,76 +1,13 @@
-var templateManager = function(fs) {
-
-    //Private members
-    var _fs = fs;
-    var templatePath = "";
-    var viewsPath = "";
-    var templateContent = null;
-    var templatePlaceholders = [];
-    var fileEncoding = "utf-8";
-
-    //Loads template html content from cache or fom file
-    function loadTemplate() {
-        var templatePattern = /@[[a-zA-Z0-9]+]/g;
-
-        templateContent = _fs.readFileSync(templatePath, fileEncoding);
-        templatePlaceholders = templateContent.match(templatePattern);
-
-    }
-
-    function loadView(viewName, callback) {
-        _fs.readFile(viewsPath + viewName, fileEncoding, function(err, content) {
-            if (err) throw err;
-            callback(content);
-        });
-    }
-
-    //public members
-    this.init = function(template, viewsFolder) {
-        templatePath = template;
-        viewsPath = viewsFolder;
-        loadTemplate();
-    }
-
-    this.processView = function(viewName, params) {
-
-        if (templatePath.length <= 0) {
-            throw "template not specified";
-        }
-
-        if (viewsPath.length <= 0) {
-            throw "view directory not specified";
-        }
-
-        loadView(viewName, function(viewContent) {
-            debugger;
-            var viewPattern = />>[A-Za-z0-9]+:(\r\n){1}(.+\r\n)*<</g;
-            var viewTags = viewContent.match(viewPattern);
-            
-            templatePlaceholders.forEach(function(tag) {
-                 debugger;
-                 console.log(tag);
-                 var tagName = tag.replace("@[","").replace(']',"");
-                 viewTags.forEach(function(viewTag) {
-                     if(viewTag.indexOf(">>" + tagName + ":") != -1){
-                         var viewPart = viewTag.replace(">>" + tagName + ":");
-                         viewPart = viewPart.replace("<<","");
-                         
-                         templateContent = templateContent.replace(tag,viewPart);
-                     }
-                 }, this);
-            },this);
-                      
-            return templateContent;
-        });
-
-    }
+var tm = require("./lib/templateManager");
 
 
-};
+module.exports = function (fs, app, config) {
+    var tm = new templateManager(fs);
 
-var fs = require("fs");
+    tm.init(config.template, config.viewDir);
 
-var man = new templateManager(fs);
-man.init("./test/template/masterLayout.html", "./test/views/");
+    app.engine("ntl", function (filePath, options, callback) {
+        tm.processView(filePath, options, callback);
+    });
 
-console.log(man.processView("index.html", null));
+}
