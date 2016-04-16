@@ -1,7 +1,7 @@
 {
     "name": "ntepace",
     "description": "simple node template engine",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": {
         "name": "Christian Pace",
         "email": "devtrix.dev@gmail.com"
