@@ -1,7 +1,7 @@
 {
     "name": "ntepace",
     "description": "simple node template engine",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "author": {
         "name": "Christian Pace",
         "email": "devtrix.dev@gmail.com"
@@ -19,10 +19,10 @@
        "node mvc engine"
     ],
     "dependencies": {
-     
+        "express": "^4.13.4"
     },
     "devDependencies": {
-       
+       "express": "^4.13.4"
     },
     "engines": {
         "node": ">= 0.10.0"
